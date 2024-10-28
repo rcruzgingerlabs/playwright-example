@@ -1,5 +1,6 @@
 import { chromium, test, expect, type Page } from "@playwright/test";
 import { APP_URL, Selector } from "@/constants";
+import percySnapshot from "@percy/playwright";
 
 async function addText(
   page: Page,
@@ -20,8 +21,8 @@ async function addText(
 }
 
 async function drawInk(page: Page) {
-  const start = [100, 100];
-  const end = [300, 300];
+  const start = [75, 75];
+  const end = [250, 300];
   const toolboxPenLocator = page.locator(Selector.TOOLBOX_PEN_BUTTON);
   await expect(toolboxPenLocator).toHaveCount(1);
   await page.locator(Selector.TOOLBOX_PEN_BUTTON).click();
@@ -83,11 +84,9 @@ async function connectToLambdaTest() {
 }
 
 test.describe("Draw ink and type text", () => {
-  test("should log in and add a note", async ({
-    /*page*/
-  }) => {
-    const browser = await connectToLambdaTest();
-    const page = await browser.newPage();
+  test("should log in and add a note", async ({ page }) => {
+    // const browser = await connectToLambdaTest();
+    // const page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 1024 });
     await page.goto(APP_URL);
     await page.getByText("Log in").click();
@@ -103,24 +102,24 @@ test.describe("Draw ink and type text", () => {
     await page.locator('[data-testid="new-note"]').click();
     await page.waitForTimeout(1000);
 
-    await addText(page, "lorem ipsum", { x: 200, y: 200 });
+    await addText(page, "lorem ipsum", { x: 250, y: 250 });
     await drawInk(page);
     await page.locator(Selector.NOTE_RENDERER).screenshot({
-      path: `screenshots/chromium/note-renderer-${Date.now()}.png`,
+      path: `screenshots/chromium/note-renderer.png`,
     });
-    await page.evaluate(
-      (_) => {},
-      `lambdatest_action: ${JSON.stringify({
-        action: "smartui.takeScreenshot",
-        arguments: {
-          fullPage: true,
-          screenshotName: `note-renderer-${Date.now()}`,
-        },
-      })}`
-    );
-    await browser.close();
+    // await page.evaluate(
+    //   (_) => {},
+    //   `lambdatest_action: ${JSON.stringify({
+    //     action: "smartui.takeScreenshot",
+    //     arguments: {
+    //       fullPage: true,
+    //       screenshotName: `note-renderer-${Date.now()}`,
+    //     },
+    //   })}`
+    // );
+    // await browser.close();
     // await page.waitForTimeout(5000);
-    // await percySnapshot(page, "Renderer", { scope: "canvas" });
+    await percySnapshot(page, "Renderer", { scope: "canvas" });
     // await page.evaluate(async () => {
     //   const canvas = document.querySelector("canvas");
     //   const img = new Image();

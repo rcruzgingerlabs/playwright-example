@@ -47,110 +47,108 @@ async function drawInk(page) {
   await page.mouse.up();
 }
 
-(async function connectToLambdaTest() {
-  const capabilities = {
-    browserName: "Chrome", // Browsers allowed: `Chrome`, `MicrosoftEdge`, `pw-chromium`, `pw-firefox` and `pw-webkit`
-    browserVersion: "latest",
-    "LT:Options": {
-      platform: "Windows 10",
-      build: "Note renderer local - playwright-smartui.js",
-      name: "Note render, ink and text",
-      user: process.env.LT_USERNAME,
-      accessKey: process.env.LT_ACCESS_KEY,
-      network: true,
-      video: true,
-      console: true,
-      tunnel: true,
-      tunnel_name: "rcruz-mbp-m3-max.local-2vru3mzhz0x",
-      smartUIProjectName: "Notes",
-    },
-  };
+// (async function connectToLambdaTest() {
+//   const capabilities = {
+//     browserName: "Chrome", // Browsers allowed: `Chrome`, `MicrosoftEdge`, `pw-chromium`, `pw-firefox` and `pw-webkit`
+//     browserVersion: "latest",
+//     "LT:Options": {
+//       platform: "Windows 10",
+//       build: "Note renderer local - playwright-smartui.js",
+//       name: "Note render, ink and text",
+//       user: process.env.LT_USERNAME,
+//       accessKey: process.env.LT_ACCESS_KEY,
+//       network: true,
+//       video: true,
+//       console: true,
+//       tunnel: true,
+//       tunnel_name: "rcruz-mbp-m3-max.local-2vru3mzhz0x",
+//       smartUIProjectName: "Notes",
+//     },
+//   };
 
-  // const capabilities = {
-  //   browserName: "Chrome",
-  //   browserVersion: "129.0",
-  //   "LT:Options": {
-  //     video: true,
-  //     platform: "Windows 10",
-  //     tunnel: true,
-  //     console: true,
-  //     smartUIProjectName: "Notes",
-  //   },
-  // };
+//   // const capabilities = {
+//   //   browserName: "Chrome",
+//   //   browserVersion: "129.0",
+//   //   "LT:Options": {
+//   //     video: true,
+//   //     platform: "Windows 10",
+//   //     tunnel: true,
+//   //     console: true,
+//   //     smartUIProjectName: "Notes",
+//   //   },
+//   // };
 
-  const browser = await chromium.connect({
-    wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(
-      JSON.stringify(capabilities)
-    )}`,
-  });
-  // return browser;
-
-  const page = await browser.newPage();
-  await page.setViewportSize({ width: 1280, height: 1024 });
-  await page.goto(APP_URL);
-  await page.getByText("Log in").click();
-  await page.locator("#nav-email-input").fill("");
-  await page.locator("#nav-password-input").fill("");
-  await page.locator('[data-testid="login-submit-button"]').click();
-  await page.waitForTimeout(3000);
-
-  await page.locator('[data-testid="new-note"]').click();
-  await page.waitForTimeout(1000);
-
-  await addText(page, "lorem ipsum", { x: 300, y: 350 });
-  await drawInk(page);
-  await page.locator(Selector.NOTE_RENDERER).screenshot({
-    path: `screenshots/chromium/note-renderer-${Date.now()}.png`,
-  });
-  await page.evaluate(
-    (_) => {},
-    `lambdatest_action: ${JSON.stringify({
-      action: "smartui.takeScreenshot",
-      arguments: {
-        fullPage: true,
-        screenshotName: `note-renderer-ink-text`,
-      },
-    })}`
-  );
-  await browser.close();
-})();
-
-// test.describe("Draw ink and type text", () => {
-//   test("should log in and add a note", async ({
-//     /*page*/
-//   }) => {
-//     const browser = await connectToLambdaTest();
-//     const page = await browser.newPage();
-//     await page.setViewportSize({ width: 1280, height: 1024 });
-//     await page.goto(APP_URL);
-//     await page.getByText("Log in").click();
-//     await page
-//       .locator("#nav-email-input")
-//       .fill(process.env.NOTABILITY_USERNAME);
-//     await page
-//       .locator("#nav-password-input")
-//       .fill(process.env.NOTABILITY_PASSWORD);
-//     await page.locator('[data-testid="login-submit-button"]').click();
-//     await page.waitForTimeout(3000);
-
-//     await page.locator('[data-testid="new-note"]').click();
-//     await page.waitForTimeout(1000);
-
-//     await addText(page, "lorem ipsum", { x: 200, y: 200 });
-//     await drawInk(page);
-//     await page.locator(Selector.NOTE_RENDERER).screenshot({
-//       path: `screenshots/chromium/note-renderer-${Date.now()}.png`,
-//     });
-//     await page.evaluate(
-//       (_) => {},
-//       `lambdatest_action: ${JSON.stringify({
-//         action: "smartui.takeScreenshot",
-//         arguments: {
-//           fullPage: true,
-//           screenshotName: `note-renderer-${Date.now()}`,
-//         },
-//       })}`
-//     );
-//     await browser.close();
+//   const browser = await chromium.connect({
+//     wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(
+//       JSON.stringify(capabilities)
+//     )}`,
 //   });
-// });
+//   // return browser;
+
+//   const page = await browser.newPage();
+//   await page.setViewportSize({ width: 1280, height: 1024 });
+//   await page.goto(APP_URL);
+//   await page.getByText("Log in").click();
+//   await page.locator("#nav-email-input").fill("");
+//   await page.locator("#nav-password-input").fill("");
+//   await page.locator('[data-testid="login-submit-button"]').click();
+//   await page.waitForTimeout(3000);
+
+//   await page.locator('[data-testid="new-note"]').click();
+//   await page.waitForTimeout(1000);
+
+//   await addText(page, "lorem ipsum", { x: 300, y: 350 });
+//   await drawInk(page);
+//   await page.locator(Selector.NOTE_RENDERER).screenshot({
+//     path: `screenshots/chromium/note-renderer-${Date.now()}.png`,
+//   });
+//   await page.evaluate(
+//     (_) => {},
+//     `lambdatest_action: ${JSON.stringify({
+//       action: "smartui.takeScreenshot",
+//       arguments: {
+//         fullPage: true,
+//         screenshotName: `note-renderer-ink-text`,
+//       },
+//     })}`
+//   );
+//   await browser.close();
+// })();
+
+test.describe("Draw ink and type text", () => {
+  test("should log in and add a note", async ({ page }) => {
+    // const browser = await connectToLambdaTest();
+    // const page = await browser.newPage();
+    await page.setViewportSize({ width: 1280, height: 1024 });
+    await page.goto(APP_URL);
+    await page.getByText("Log in").click();
+    await page
+      .locator("#nav-email-input")
+      .fill(process.env.NOTABILITY_USERNAME);
+    await page
+      .locator("#nav-password-input")
+      .fill(process.env.NOTABILITY_PASSWORD);
+    await page.locator('[data-testid="login-submit-button"]').click();
+    await page.waitForTimeout(3000);
+
+    await page.locator('[data-testid="new-note"]').click();
+    await page.waitForTimeout(1000);
+
+    await addText(page, "lorem ipsum", { x: 200, y: 200 });
+    await drawInk(page);
+    await page.locator(Selector.NOTE_RENDERER).screenshot({
+      path: `screenshots/chromium/note-renderer.png`,
+    });
+    // await page.evaluate(
+    //   (_) => {},
+    //   `lambdatest_action: ${JSON.stringify({
+    //     action: "smartui.takeScreenshot",
+    //     arguments: {
+    //       fullPage: true,
+    //       screenshotName: `note-renderer-${Date.now()}`,
+    //     },
+    //   })}`
+    // );
+    // await browser.close();
+  });
+});
