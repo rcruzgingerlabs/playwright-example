@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./tests/*"]
+      "@/tests/*": ["./tests/*"],
+      "@/util/*": ["./util/*"]
     },
     "target": "es2020",
     "lib": ["es2020", "dom"],
@@ -10,5 +11,5 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["**/*.ts", "tests"]
+  "include": ["**/*.ts", "tests", "util"]
 }
